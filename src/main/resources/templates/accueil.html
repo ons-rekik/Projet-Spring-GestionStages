@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Accueil</title>
+</head>
+<body>
+<section>
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <h1 class="display-6">Gestion des stages et du suivi des étudiants</h1>
+        <p class="lead">Gérez les étudiants, les enseignants encadrants, les entreprises d'accueil et le suivi des stages.</p>
+    </div>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card h-100"><div class="card-body">
+                <h5 class="card-title">Administrateur</h5>
+                <p class="card-text">Étudiants, enseignants, entreprises, affectations et statistiques.</p>
+                <a th:href="@{/admin/stages}" class="btn btn-primary">Accéder</a>
+            </div></div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100"><div class="card-body">
+                <h5 class="card-title">Enseignant</h5>
+                <p class="card-text">Étudiants affectés, réunions, observations et validation des étapes.</p>
+                <a th:href="@{/enseignant/etudiants}" class="btn btn-primary">Accéder</a>
+            </div></div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100"><div class="card-body">
+                <h5 class="card-title">Étudiant</h5>
+                <p class="card-text">Informations du stage, avancement et livrables.</p>
+                <a th:href="@{/etudiant/stage}" class="btn btn-primary">Accéder</a>
+            </div></div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
