@@ -1,4 +1,5 @@
 package com.iit.gestion_stages.entity.enums;
 
-public class StatutStage {
+public enum StatutStage {
+    EN_ATTENTE, EN_COURS, TERMINE, VALIDE
 }
