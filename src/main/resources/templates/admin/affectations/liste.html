@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Affectations</title>
+</head>
+<body>
+<section>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Affecter un enseignant à un étudiant</h1>
+        <div>
+            <a th:href="@{/admin/affectations}"
+               class="btn btn-sm"
+               th:classappend="${!nonAffectes} ? 'btn-primary' : 'btn-outline-primary'">Tous</a>
+            <a th:href="@{/admin/affectations(nonAffectes=true)}"
+               class="btn btn-sm"
+               th:classappend="${nonAffectes} ? 'btn-warning' : 'btn-outline-warning'">Sans encadrant</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle bg-white">
+            <thead class="table-light">
+            <tr>
+                <th>Étudiant</th>
+                <th>Stage</th>
+                <th>Entreprise</th>
+                <th>Encadrant actuel</th>
+                <th>Nouvel encadrant</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="s : ${stages}">
+                <td th:text="${s.etudiantNomComplet}"></td>
+                <td th:text="${s.sujet}"></td>
+                <td th:text="${s.entrepriseNom}"></td>
+                <td>
+                    <span th:if="${s.encadrantId != null}" th:text="${s.encadrantNomComplet}"></span>
+                    <span th:if="${s.encadrantId == null}" class="badge bg-warning text-dark">Non affecté</span>
+                </td>
+                <td>
+                    <form th:action="@{/admin/affectations/{id}(id=${s.id})}" method="post"
+                          class="d-flex gap-2">
+                        <select name="enseignantId" class="form-select form-select-sm" required>
+                            <option value="">-- Choisir --</option>
+                            <option th:each="e : ${enseignants}" th:value="${e.id}"
+                                    th:selected="${s.encadrantId != null and s.encadrantId == e.id}"
+                                    th:text="${e.prenom + ' ' + e.nom}"></option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-success">Affecter</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(stages)}">
+                <td colspan="5" class="text-center text-muted py-4">Aucun stage à afficher.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>
