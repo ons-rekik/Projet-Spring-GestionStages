@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Stage</title>
+</head>
+<body>
+<section>
+    <h1 class="h3 mb-3" th:text="${stage.id == null} ? 'Nouveau stage' : 'Modifier le stage'"></h1>
+
+    <form th:action="@{/admin/stages}" th:object="${stage}" method="post"
+          class="card card-body">
+        <input type="hidden" th:field="*{id}">
+
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+            <div th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-12">
+                <label for="sujet" class="form-label">Sujet *</label>
+                <input type="text" id="sujet" th:field="*{sujet}" class="form-control"
+                       th:classappend="${#fields.hasErrors('sujet')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{sujet}"></div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="etudiantId" class="form-label">Étudiant *</label>
+                <select id="etudiantId" th:field="*{etudiantId}" class="form-select"
+                        th:classappend="${#fields.hasErrors('etudiantId')} ? 'is-invalid'">
+                    <option value="">-- Choisir un étudiant --</option>
+                    <option th:each="e : ${etudiants}" th:value="${e.id}"
+                            th:text="${e.prenom + ' ' + e.nom}"></option>
+                </select>
+                <div class="invalid-feedback" th:errors="*{etudiantId}"></div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="entrepriseId" class="form-label">Entreprise *</label>
+                <select id="entrepriseId" th:field="*{entrepriseId}" class="form-select"
+                        th:classappend="${#fields.hasErrors('entrepriseId')} ? 'is-invalid'">
+                    <option value="">-- Choisir une entreprise --</option>
+                    <option th:each="en : ${entreprises}" th:value="${en.id}"
+                            th:text="${en.nom}"></option>
+                </select>
+                <div class="invalid-feedback" th:errors="*{entrepriseId}"></div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="dateDebut" class="form-label">Date de début</label>
+                <input type="date" id="dateDebut" th:field="*{dateDebut}" class="form-control">
+            </div>
+
+            <div class="col-md-6">
+                <label for="dateFin" class="form-label">Date de fin</label>
+                <input type="date" id="dateFin" th:field="*{dateFin}" class="form-control">
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a th:href="@{/admin/stages}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>

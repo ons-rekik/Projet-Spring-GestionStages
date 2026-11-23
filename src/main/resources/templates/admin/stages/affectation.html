@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Affecter un enseignant</title>
+</head>
+<body>
+<section>
+    <h1 class="h3 mb-3">Affecter un enseignant encadrant</h1>
+
+    <div class="card card-body mb-3">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Sujet</dt>
+            <dd class="col-sm-9" th:text="${stage.sujet}"></dd>
+            <dt class="col-sm-3">Étudiant</dt>
+            <dd class="col-sm-9" th:text="${stage.etudiantNomComplet}"></dd>
+            <dt class="col-sm-3">Entreprise</dt>
+            <dd class="col-sm-9" th:text="${stage.entrepriseNom}"></dd>
+            <dt class="col-sm-3">Encadrant actuel</dt>
+            <dd class="col-sm-9">
+                <span th:if="${stage.encadrantId != null}" th:text="${stage.encadrantNomComplet}"></span>
+                <span th:if="${stage.encadrantId == null}" class="badge bg-warning text-dark">Non affecté</span>
+            </dd>
+        </dl>
+    </div>
+
+    <form th:action="@{/admin/stages/{id}/affecter(id=${stage.id})}" method="post"
+          class="card card-body">
+        <label for="enseignantId" class="form-label">Enseignant *</label>
+        <select id="enseignantId" name="enseignantId" class="form-select" required>
+            <option value="">-- Choisir un enseignant --</option>
+            <option th:each="e : ${enseignants}" th:value="${e.id}"
+                    th:selected="${stage.encadrantId != null and stage.encadrantId == e.id}"
+                    th:text="${e.prenom + ' ' + e.nom + (e.specialite != null ? ' (' + e.specialite + ')' : '')}"></option>
+        </select>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-success">Affecter</button>
+            <a th:href="@{/admin/stages}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>
