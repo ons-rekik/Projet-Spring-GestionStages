@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Mes étudiants</title>
+</head>
+<body>
+<section>
+    <h1 class="h3 mb-3">Mes étudiants affectés</h1>
+
+    <!-- Choix de l'enseignant (pas d'authentification pour l'instant) -->
+    <form th:action="@{/enseignant/etudiants}" method="get" class="row g-2 mb-4">
+        <div class="col-md-5">
+            <select name="enseignantId" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Choisir un enseignant --</option>
+                <option th:each="e : ${enseignants}" th:value="${e.id}"
+                        th:text="${e.prenom + ' ' + e.nom}"
+                        th:selected="${enseignantId != null and enseignantId == e.id}"></option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-outline-primary">Afficher</button>
+        </div>
+    </form>
+
+    <!-- Aucun enseignant choisi -->
+    <div th:if="${enseignantId == null}" class="alert alert-info">
+        Sélectionnez un enseignant pour consulter les étudiants qui lui sont affectés.
+    </div>
+
+    <!-- Enseignant choisi -->
+    <div th:if="${enseignant != null}">
+        <p class="text-muted">
+            Encadrant : <strong th:text="${enseignant.prenom + ' ' + enseignant.nom}"></strong>
+            <span th:if="${enseignant.departement != null}" th:text="'· ' + ${enseignant.departement}"></span>
+            ·
+            <span class="badge bg-primary"
+                  th:text="${#lists.size(stages)} + (${#lists.size(stages)} > 1 ? ' étudiants' : ' étudiant')"></span>        </p>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle bg-white">
+                <thead class="table-light">
+                <tr>
+                    <th>Étudiant</th>
+                    <th>Matricule</th>
+                    <th>Filière / Niveau</th>
+                    <th>Email</th>
+                    <th>Sujet du stage</th>
+                    <th>Entreprise</th>
+                    <th>Période</th>
+                    <th>Statut</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="s : ${stages}" th:with="etu=${etudiants[s.etudiantId]}">
+                    <td th:text="${s.etudiantNomComplet}"></td>
+                    <td th:text="${etu?.matricule}"></td>
+                    <td th:text="${etu?.filiere} + ' / ' + ${etu?.niveau}"></td>
+                    <td th:text="${etu?.email}"></td>
+                    <td th:text="${s.sujet}"></td>
+                    <td th:text="${s.entrepriseNom}"></td>
+                    <td>
+                        <span th:text="${#temporals.format(s.dateDebut, 'dd/MM/yyyy')}"></span>
+                        →
+                        <span th:text="${#temporals.format(s.dateFin, 'dd/MM/yyyy')}"></span>
+                    </td>
+                    <td>
+                        <span class="badge" th:text="${s.statut}"
+                              th:classappend="${s.statut.name() == 'EN_ATTENTE'} ? 'bg-secondary' :
+                                              (${s.statut.name() == 'EN_COURS'} ? 'bg-primary' :
+                                              (${s.statut.name() == 'TERMINE'} ? 'bg-warning text-dark' : 'bg-success'))"></span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(stages)}">
+                    <td colspan="8" class="text-center text-muted py-4">
+                        Aucun étudiant ne vous est affecté pour le moment.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+</html>
