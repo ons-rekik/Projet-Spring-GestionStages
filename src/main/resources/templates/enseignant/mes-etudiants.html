@@ -49,6 +49,7 @@
                     <th>Entreprise</th>
                     <th>Période</th>
                     <th>Statut</th>
+                    <th class="text-end">Suivi</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -70,9 +71,13 @@
                                               (${s.statut.name() == 'EN_COURS'} ? 'bg-primary' :
                                               (${s.statut.name() == 'TERMINE'} ? 'bg-warning text-dark' : 'bg-success'))"></span>
                     </td>
+                    <td class="text-end">
+                        <a th:href="@{/enseignant/stages/{id}/reunions(id=${s.id})}"
+                           class="btn btn-sm btn-outline-primary">Réunions</a>
+                    </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(stages)}">
-                    <td colspan="8" class="text-center text-muted py-4">
+                    <td colspan="9" class="text-center text-muted py-4">
                         Aucun étudiant ne vous est affecté pour le moment.
                     </td>
                 </tr>
