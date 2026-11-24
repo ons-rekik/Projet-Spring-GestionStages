@@ -1,4 +1,9 @@
 import { Link } from 'react-router-dom'
+import Fonctionnalites from '../components/Fonctionnalites.jsx'
+import Parcours from '../components/Parcours.jsx'
+import IitEnBref from '../components/IitEnBref.jsx'
+import Faq from '../components/Faq.jsx'
+import BandeauCta from '../components/BandeauCta.jsx'
 
 const FILIERES = [
     'Génie Civil', 'Génie des procédés', 'Génie Informatique', 'Génie Mécanique',
@@ -83,6 +88,11 @@ export default function Accueil() {
                     {[...FILIERES, ...FILIERES].map((f, i) => <span key={i}>{f}</span>)}
                 </div>
             </div>
+            <Fonctionnalites />
+            <Parcours />
+            <IitEnBref />
+            <Faq />
+            <BandeauCta />
         </>
     )
 }
