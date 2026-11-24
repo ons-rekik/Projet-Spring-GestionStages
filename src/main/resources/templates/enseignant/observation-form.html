@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Observations et recommandations</title>
+</head>
+<body>
+<section>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Observations et recommandations</h1>
+        <a th:href="${stage.encadrantId != null} ? @{/enseignant/etudiants(enseignantId=${stage.encadrantId})} : @{/enseignant/etudiants}"
+           class="btn btn-outline-secondary btn-sm">← Mes étudiants</a>
+    </div>
+
+    <!-- Rappel du stage -->
+    <p class="text-muted">
+        Étudiant : <strong th:text="${stage.etudiantNomComplet}"></strong> ·
+        Stage : <span th:text="${stage.sujet}"></span> ·
+        Entreprise : <span th:text="${stage.entrepriseNom}"></span>
+    </p>
+
+    <!-- Formulaire d'ajout -->
+    <form th:action="@{/enseignant/stages/{sid}/observations(sid=${stage.id})}" th:object="${observation}"
+          method="post" class="card card-body mb-4">
+        <h2 class="h5 mb-3">Ajouter une observation</h2>
+
+        <div class="row g-3">
+            <div class="col-md-12">
+                <label for="contenu" class="form-label">Observation *</label>
+                <textarea id="contenu" th:field="*{contenu}" rows="4" class="form-control"
+                          placeholder="Votre constat sur l'avancement du stage..."
+                          th:classappend="${#fields.hasErrors('contenu')} ? 'is-invalid'"></textarea>
+                <div class="invalid-feedback" th:errors="*{contenu}"></div>
+            </div>
+
+            <div class="col-md-12">
+                <label for="recommandation" class="form-label">Recommandation</label>
+                <textarea id="recommandation" th:field="*{recommandation}" rows="3" class="form-control"
+                          placeholder="Conseils ou actions à mener par l'étudiant..."
+                          th:classappend="${#fields.hasErrors('recommandation')} ? 'is-invalid'"></textarea>
+                <div class="invalid-feedback" th:errors="*{recommandation}"></div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+        </div>
+    </form>
+
+    <!-- Historique -->
+    <h2 class="h5 mb-3">Historique (<span th:text="${#lists.size(observations)}">0</span>)</h2>
+
+    <div th:each="o : ${observations}" class="card mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>
+                <strong th:text="${#temporals.format(o.date, 'dd/MM/yyyy')}"></strong>
+                <span class="text-muted" th:if="${o.auteurNomComplet != null}"
+                      th:text="'· ' + ${o.auteurNomComplet}"></span>
+            </span>
+            <form th:action="@{/enseignant/stages/{sid}/observations/{id}/supprimer(sid=${stage.id}, id=${o.id})}"
+                  method="post" class="d-inline"
+                  onsubmit="return confirm('Supprimer cette observation ?');">
+                <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+            </form>
+        </div>
+        <div class="card-body">
+            <p class="mb-2" style="white-space: pre-line;" th:text="${o.contenu}"></p>
+            <div th:if="${o.recommandation != null and !#strings.isEmpty(o.recommandation)}"
+                 class="alert alert-info mb-0">
+                <strong>Recommandation :</strong>
+                <span style="white-space: pre-line;" th:text="${o.recommandation}"></span>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(observations)}" class="text-center text-muted py-4">
+        Aucune observation enregistrée pour ce stage.
+    </div>
+</section>
+</body>
+</html>
