@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Réunions de suivi</title>
+</head>
+<body>
+<section>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Réunions de suivi</h1>
+        <a th:href="${stage.encadrantId != null} ? @{/enseignant/etudiants(enseignantId=${stage.encadrantId})} : @{/enseignant/etudiants}"
+           class="btn btn-outline-secondary btn-sm">← Mes étudiants</a>
+    </div>
+
+    <!-- Rappel du stage -->
+    <p class="text-muted">
+        Étudiant : <strong th:text="${stage.etudiantNomComplet}"></strong> ·
+        Stage : <span th:text="${stage.sujet}"></span> ·
+        Entreprise : <span th:text="${stage.entrepriseNom}"></span>
+    </p>
+
+    <!-- Liste des réunions -->
+    <div class="table-responsive mb-4">
+        <table class="table table-striped table-hover align-middle bg-white">
+            <thead class="table-light">
+            <tr>
+                <th>Date</th>
+                <th>Lieu</th>
+                <th>Compte rendu</th>
+                <th class="text-end">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${reunions}">
+                <td th:text="${#temporals.format(r.date, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${r.lieu}"></td>
+                <td th:text="${r.compteRendu}" style="white-space: pre-line;"></td>
+                <td class="text-end">
+                    <a th:href="@{/enseignant/stages/{sid}/reunions/{id}/modifier(sid=${stage.id}, id=${r.id})}"
+                       class="btn btn-sm btn-outline-primary">Modifier</a>
+                    <form th:action="@{/enseignant/stages/{sid}/reunions/{id}/supprimer(sid=${stage.id}, id=${r.id})}"
+                          method="post" class="d-inline"
+                          onsubmit="return confirm('Supprimer cette réunion ?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(reunions)}">
+                <td colspan="4" class="text-center text-muted py-4">Aucune réunion enregistrée pour ce stage.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Formulaire d'ajout / modification -->
+    <form th:action="@{/enseignant/stages/{sid}/reunions(sid=${stage.id})}" th:object="${reunion}"
+          method="post" class="card card-body">
+        <h2 class="h5 mb-3"
+            th:text="${reunion.id == null} ? 'Ajouter une réunion' : 'Modifier la réunion'"></h2>
+        <input type="hidden" th:field="*{id}">
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="date" class="form-label">Date et heure *</label>
+                <input type="datetime-local" id="date" th:field="*{date}" class="form-control"
+                       th:classappend="${#fields.hasErrors('date')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{date}"></div>
+            </div>
+
+            <div class="col-md-8">
+                <label for="lieu" class="form-label">Lieu</label>
+                <input type="text" id="lieu" th:field="*{lieu}" class="form-control"
+                       placeholder="Salle, entreprise, visioconférence...">
+            </div>
+
+            <div class="col-md-12">
+                <label for="compteRendu" class="form-label">Compte rendu</label>
+                <textarea id="compteRendu" th:field="*{compteRendu}" rows="4" class="form-control"
+                          th:classappend="${#fields.hasErrors('compteRendu')} ? 'is-invalid'"></textarea>
+                <div class="invalid-feedback" th:errors="*{compteRendu}"></div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary"
+                    th:text="${reunion.id == null} ? 'Ajouter' : 'Enregistrer'">Enregistrer</button>
+            <a th:if="${reunion.id != null}" th:href="@{/enseignant/stages/{sid}/reunions(sid=${stage.id})}"
+               class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>
