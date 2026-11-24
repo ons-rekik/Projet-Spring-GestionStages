@@ -76,6 +76,8 @@
                            class="btn btn-sm btn-outline-primary">Réunions</a>
                         <a th:href="@{/enseignant/stages/{id}/observations(id=${s.id})}"
                            class="btn btn-sm btn-outline-secondary">Observations</a>
+                        <a th:href="@{/enseignant/stages/{id}/etapes(id=${s.id})}"
+                           class="btn btn-sm btn-outline-success">Étapes</a>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(stages)}">
