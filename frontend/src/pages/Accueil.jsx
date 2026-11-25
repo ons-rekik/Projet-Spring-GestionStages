@@ -44,7 +44,7 @@ export default function Accueil() {
                     </p>
                     <div className="hero-actions a4">
                         <Link to="/connexion" className="btn btn-primary btn-lg">Se connecter →</Link>
-                        <a href="#fonctionnalites" className="btn btn-outline btn-lg">Découvrir</a>
+                        <Link to="/#fonctionnalites" className="btn btn-outline btn-lg">Découvrir</Link>
                     </div>
                 </div>
 
