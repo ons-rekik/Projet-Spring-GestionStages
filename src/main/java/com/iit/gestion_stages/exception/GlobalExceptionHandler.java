@@ -32,6 +32,11 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.CONFLICT, ex.getMessage(), request, Map.of());
     }
 
+    @ExceptionHandler(AuthentificationException.class)
+    public ResponseEntity<ApiError> handleAuth(AuthentificationException ex, HttpServletRequest request) {
+        return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), request, Map.of());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
         Map<String, String> details = new LinkedHashMap<>();
